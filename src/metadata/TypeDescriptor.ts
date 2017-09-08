@@ -12,6 +12,10 @@ export class TypeDescriptor {
         this.fields.sort();
     }
 
+    public equalsTo(other: TypeDescriptor): boolean {
+        return _(this.fields).isEqual(other.fields);
+    }
+
     public matches(obj: any): boolean {
         const actualKeys = _(obj).keys().sort().value();
         return _(this.fields).isEqual(actualKeys);
