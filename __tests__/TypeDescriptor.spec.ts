@@ -48,7 +48,7 @@ describe("TypeDescriptor", () => {
         expect(descr.matches(obj)).toBe(false);
     });
 
-    it("Should not match with deserialized object with extra keys", () => {
+    it("Should match with deserialized object with extra keys", () => {
         const serialized = '{"a": 5, "banana":[1,2,3], "exxtra": "large", "orange":{}}';
         const descr = new TypeDescriptor();
 
@@ -57,7 +57,7 @@ describe("TypeDescriptor", () => {
         descr.add("orange");
 
         const obj = JSON.parse(serialized);
-        expect(descr.matches(obj)).toBe(false);
+        expect(descr.matches(obj)).toBe(true);
     });
 
     it("Should be equal with himself", () => {

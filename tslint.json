@@ -1,3 +1,4 @@
 {
-	"extends": "tslint:recommended"
+	"extends": "tslint:recommended",
+	"variable-name": [true, "ban-keywords", "check-format", "allow-leading-underscore"]
 }

@@ -18,7 +18,19 @@ export class TypeDescriptor {
 
     public matches(obj: any): boolean {
         const actualKeys = _(obj).keys().sort().value();
-        return _(this.fields).isEqual(actualKeys);
+        let i = 0;
+        let j = 0;
+
+        while (i < this.fields.length && j < actualKeys.length) {
+            if (this.fields[j] !== actualKeys[i]) {
+                j++;
+            } else {
+                j++;
+                i++;
+            }
+        }
+
+        return i === this.fields.length;
     }
 
     public toString(): string {
