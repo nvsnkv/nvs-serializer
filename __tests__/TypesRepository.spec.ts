@@ -48,6 +48,6 @@ describe("TypesRepository", () => {
         const serialized = JSON.stringify(data);
         const deserialized = JSON.parse(serialized);
 
-        expect(repo.getCtor(data)).toBe(Annotated);
+        expect(repo.getConstructor(data)).toBe(Annotated);
     });
 });
