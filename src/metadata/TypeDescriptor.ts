@@ -22,7 +22,7 @@ export class TypeDescriptor {
         let j = 0;
 
         while (i < this.fields.length && j < actualKeys.length) {
-            if (this.fields[j] !== actualKeys[i]) {
+            if (this.fields[i] !== actualKeys[j]) {
                 j++;
             } else {
                 j++;
