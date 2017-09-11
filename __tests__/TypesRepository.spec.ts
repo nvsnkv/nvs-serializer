@@ -2,16 +2,22 @@
 
 import "jest";
 import { Serializable, TypeRepository } from "../src";
-
+// tslint:disable
 class Sample {
     public prop: number;
 }
 
-// tslint:disable-next-line:max-classes-per-file
 class Annotated {
     @Serializable()
     public prop: number;
 }
+
+class AnnotatedSuccessor extends Annotated {
+    @Serializable()
+    public rep: string;
+}
+
+// tslint:enable
 
 describe("TypesRepository", () => {
     it("Shouldnt be able to add not-annotated type", () => {
@@ -49,5 +55,15 @@ describe("TypesRepository", () => {
         const deserialized = JSON.parse(serialized);
 
         expect(repo.getConstructor(data)).toBe(Annotated);
+    });
+
+    it("Should register both successor and its base class", () => {
+        const repo = new TypeRepository();
+        repo.register(Annotated);
+        expect(() => repo.register(AnnotatedSuccessor)).not.toThrowError();
+
+        const data = JSON.parse('{"prop": 15, "rep": "some text"}');
+        expect(repo.getConstructor(data)).toBe(AnnotatedSuccessor);
+
     });
 });

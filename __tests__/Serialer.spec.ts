@@ -24,6 +24,20 @@ class Sample {
     private _prop2: number;
 }
 
+class SampleSuccessor extends Sample {
+
+    get prop3(): boolean { return this._prop4; }
+
+    constructor(prop1: string, prop2: number, prop3: boolean) {
+        super(prop1, prop2);
+
+        this._prop4 = prop3;
+    }
+
+    @Serializable()
+    private _prop4: boolean;
+}
+
 class ComplexSample {
     @Serializable()
     public strings: string[];
@@ -58,10 +72,10 @@ class ComplexSample {
     }
 }
 
-repo.register(ComplexSample);
-
 /* tslint:enable */
 repo.register(Sample);
+repo.register(ComplexSample);
+repo.register(SampleSuccessor);
 
 describe("Serializer", () => {
     it("Should serialize objects correctly", () => {
@@ -129,5 +143,21 @@ describe("Serializer", () => {
             expect(actual.objects[i].prop1).toBe(expected.objects[i].prop1);
             expect(actual.objects[i].prop2).toBe(expected.objects[i].prop2);
         }
+    });
+
+    it("Should choose deserialization type as close as possible", () => {
+        const expected = new ComplexSample();
+        expected.object = new SampleSuccessor("common", 1, true);
+        const serializer = new Serializer(repo);
+
+        const data = serializer.stringify(expected);
+        const actual = serializer.parse<ComplexSample>(data);
+
+        expect(actual).toBeTruthy();
+        expect(actual.object).toBeTruthy();
+        expect(actual.object).toBeInstanceOf(SampleSuccessor);
+
+        const actualObject = actual.object as SampleSuccessor;
+        expect(actualObject.prop3).toBe(true);
     });
 });

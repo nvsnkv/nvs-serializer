@@ -12,6 +12,16 @@ export class TypeDescriptor {
         this.fields.sort();
     }
 
+    public clone(): TypeDescriptor {
+        const result = new TypeDescriptor();
+        result.fields = [];
+        for (const field of this.fields) {
+            result.fields.push(field);
+        }
+
+        return result;
+    }
+
     public equalsTo(other: TypeDescriptor): boolean {
         return _(this.fields).isEqual(other.fields);
     }
