@@ -1,5 +1,4 @@
-import { exec } from 'child_process';
-import 'jest';
+import "jest";
 import { defaultRepository as repo, Serializable, Serializer } from "../src";
 
 /* tslint:disable */

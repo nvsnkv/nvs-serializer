@@ -1,17 +1,30 @@
 import * as _ from "lodash";
+import { defaultOptions, SerializationOptions } from "../metadata/SerializationOptions";
+import { TypeDescriptor } from "../metadata/TypeDescriptor";
 import TypeRepository from "../repository/TypesRepository";
 
 export default class Serializer {
     private repo: TypeRepository;
+    private options: SerializationOptions;
 
-    constructor(repo: TypeRepository) {
+    constructor(repo: TypeRepository, options?: SerializationOptions) {
         if (!repo) {
             throw new Error("Unable to create serializer - no types repository given!");
         }
 
+        this.options = { ...defaultOptions, ...options };
+
         this.repo = repo;
     }
     public stringify(obj: any): string {
+        const metadata = obj[this.options.metadataPropertyName] as TypeDescriptor;
+        if (metadata) {
+            for (const field of metadata.fields) {
+                if (!obj[field]) {
+                    obj[field] = null;
+                }
+            }
+        }
         return JSON.stringify(obj);
     }
 

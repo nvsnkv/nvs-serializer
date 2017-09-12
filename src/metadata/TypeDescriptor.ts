@@ -1,38 +1,42 @@
 import * as _ from "lodash";
 
 export class TypeDescriptor {
-    private fields: string[] = [];
+    private _fields: string[] = [];
+
+    public get fields(): string[] {
+        return _.clone(this._fields);
+    }
 
     public add(key: string): void {
-        if (_(this.fields).find((i) => key === i)) {
+        if (_(this._fields).find((i) => key === i)) {
             throw new Error("Invalid operation: given key has been already added");
         }
 
-        this.fields.push(key);
-        this.fields.sort();
+        this._fields.push(key);
+        this._fields.sort();
     }
 
     public clone(): TypeDescriptor {
         const result = new TypeDescriptor();
-        result.fields = [];
-        for (const field of this.fields) {
-            result.fields.push(field);
+        result._fields = [];
+        for (const field of this._fields) {
+            result._fields.push(field);
         }
 
         return result;
     }
 
     public equalsTo(other: TypeDescriptor): boolean {
-        return _(this.fields).isEqual(other.fields);
+        return _(this._fields).isEqual(other._fields);
     }
 
-    public matches(obj: any): boolean {
+    public differsFrom(obj: any): number {
         const actualKeys = _(obj).keys().sort().value();
         let i = 0;
         let j = 0;
 
-        while (i < this.fields.length && j < actualKeys.length) {
-            if (this.fields[i] !== actualKeys[j]) {
+        while (i < this._fields.length && j < actualKeys.length) {
+            if (this._fields[i] !== actualKeys[j]) {
                 j++;
             } else {
                 j++;
@@ -40,11 +44,11 @@ export class TypeDescriptor {
             }
         }
 
-        return i === this.fields.length;
+        return i === this._fields.length ? actualKeys.length - this._fields.length : +Infinity;
     }
 
     public toString(): string {
-        return this.fields.join(",");
+        return this._fields.join(",");
     }
 }
 

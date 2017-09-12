@@ -16,8 +16,22 @@ export default class TypeRepository {
     }
 
     public getConstructor(jsonData: any): TypeConstructor {
-        const info = _(this.types).find((i) => i.descriptor.matches(jsonData));
-        return info ? info.ctor : null;
+        let min = +Infinity;
+        let bestMatch: ITypeInfo = null;
+        for (const info of this.types) {
+            const diff = info.descriptor.differsFrom(jsonData);
+
+            if (diff === 0) {
+                return info.ctor;
+            }
+
+            if (diff < min) {
+                min = diff;
+                bestMatch = info;
+            }
+        }
+
+        return bestMatch ? bestMatch.ctor : null;
     }
 
     public register(ctor: new (...args: any[]) => any): void {
