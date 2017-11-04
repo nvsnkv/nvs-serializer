@@ -1,5 +1,5 @@
 {
-  "name": "nvs-serialzer",
+  "name": "nvs-serializer",
   "version": "0.1.2",
   "description": "Yet another serializer for typescript",
   "main": "dist/index.js",
